@@ -1,0 +1,40 @@
+name: Generate PlantUML Diagram
+
+on:
+  push:
+    branches:
+      - main  # Ajuste para sua branch principal
+    paths:
+      - 'docs/architecture.puml'  # Caminho do arquivo PlantUML
+
+jobs:
+  generate-diagram:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout do repositório
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Instala o PlantUML e dependências (Java + Graphviz)
+      - name: Install PlantUML dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz default-jre
+          wget -q https://github.com/plantuml/plantuml/releases/download/v1.2023.12/plantuml-1.2023.12.jar -O plantuml.jar
+
+      # Gera o PNG a partir do arquivo PlantUML
+      - name: Generate PNG
+        run: |
+          java -jar plantuml.jar docs/architecture.puml -o docs/
+          mv docs/architecture.png docs/generated/architecture.png  # Renomeia para consistência
+
+      # Commit e push do PNG gerado
+      - name: Commit generated PNG
+        run: |
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add docs/architecture-diagram.png
+          git commit -m "Update generated architecture diagram" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
