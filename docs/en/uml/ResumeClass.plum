@@ -1,0 +1,59 @@
+@startuml
+package "Models" #LightGreen {
+  class User {
+    -id: String
+    -trialCode: String
+    -oauthToken: String
+    -createdAt: DateTime
+  }
+
+  class Resume {
+    -id: String
+    -userId: String
+    -rawData: String
+    -parsedData: Json
+    -templateId: String
+    -styles: Json
+    -pdfUrl: String
+    -createdAt: DateTime
+  }
+
+  class SpecificResume {
+    -id: String
+    -jobDescription: String
+    -customData: Json
+    -templateId: String
+    -pdfUrl: String
+    -createdAt: DateTime
+  }
+  
+note right of SpecificResume
+	Resume optimized with help of
+	an AI for one specific job description.
+	It's created based on the current
+	user's resume. Further changes in 
+	the user's resume does not impact it.
+endnote  
+
+  class Template {
+    -id: String
+    -name: String
+    -templateURL: String 
+  }
+}
+
+note right of Template::templateURL
+	Field pointing to 
+	the definition files 
+	of the template that 
+	was installed in the system.
+endnote
+	
+
+' Relacionamentos
+User "1" -- "1" Resume : "has"
+User "1" -- "0..*" SpecificResume : "has one for each job"
+SpecificResume "1" -- "1" Template : "uses"
+Resume "1" -- "1" Template : "default"
+
+@enduml

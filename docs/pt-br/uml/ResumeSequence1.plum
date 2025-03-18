@@ -1,0 +1,37 @@
+@startuml
+actor User
+participant "ResumeController" as RC #LightPink
+participant "ResumeService" as RS #LightBlue
+participant "DocumentParser" as DP #Plum
+participant "AIService" as GS #MediumPurple
+participant "Genisys" as G #MediumPurple
+participant "ResumeRepository" as RR #Khaki
+
+' Fluxo após registro
+User -> RC: POST /resumes (upload file)
+RC -> RS: createBaseResume(file)
+RS -> DP: parse(file)
+DP --> RS: rawData
+RS -> GS: analyze(rawData)
+GS -> G: call API (comprehend rawData)
+G --> GS: parsedData
+GS --> RS: parsedData
+RS -> RR: save(resume with rawData, parsedData)
+RR --> RS: success
+RS --> RC: parsedData
+RC --> User: 200 OK (parsedData)
+
+' Edição e sugestões
+User -> RC: GET /resumes/{id}/suggestions
+RC -> RS: getSuggestions(resumeId)
+RS -> GS: suggestImprovements(parsedData)
+GS -> G: call API (improve content)
+G --> GS: suggestions
+GS --> RS: suggestions
+RS --> RC: suggestions
+RC --> User: 200 OK (suggestions)
+
+note right of RS: Resume base salvo com rawData e parsedData
+note right of GS: Genisys fornece parsing e sugestões
+
+@enduml

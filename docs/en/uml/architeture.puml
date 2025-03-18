@@ -1,0 +1,78 @@
+@startuml
+left to right direction
+
+package "Resume Builder System" {
+  package "Models" #LightGreen {
+    [User]
+    [Resume]
+    [SpecificResume]
+    [Template]
+  }
+
+  package "Services" #LightBlue {
+    [AnonymousAuthService]
+    [OAuthService]
+    [ResumeService]
+    [TemplateService]
+    [AIService]  
+  }
+
+  package "Controllers" #LightPink {
+    [AuthController]
+    [ResumeController]
+    [TemplateController]
+  }
+
+  package "Repositories" #Khaki {
+    [UserRepository]
+    [ResumeRepository]
+    [SpecificResumeRepository]
+    [TemplateRepository]
+  }
+
+  package "Utils" #Plum {
+    [DocumentParser]
+    [LatexRenderer]
+    [FileStorage]
+  }
+
+  package "Configuration" #LightCyan {
+    [SpringBootApplication]
+    [AWSLambdaConfig]
+  }
+
+  package "AWS Integration" #Moccasin {
+    [S3Storage]
+    [LambdaHandler]
+  }
+
+  package "External IA Integration" #Lavender {
+    [Genisys]
+  }
+}
+
+' Relacionamentos
+[AnonymousAuthService] -[#Blue]-> [UserRepository]
+[AuthController] -[#Red]-> [AnonymousAuthService] : "Anonymous Login/Sign Up"
+[AuthController] -[#Red]-> [OAuthService] : "OAuth Login/Sign Up"
+[DocumentParser] -[#DarkViolet]-> [ResumeService]
+[FileStorage] -[#DarkViolet]-> [S3Storage] : "uses"
+[LambdaHandler] -[#Orange]-> [SpringBootApplication] : "Send Events"
+[LatexRenderer] -[#DarkViolet]-> [ResumeService] 
+[OAuthService] -[#Blue]-> [UserRepository]
+[ResumeController] -[#Red]-> [ResumeService] : "Manage resume"
+[ResumeService] -[#Blue]-> [DocumentParser]
+[ResumeService] -[#Blue]-> [FileStorage] : "Save PDF file" 
+[ResumeService] -[#Blue]-> [LatexRenderer]
+[ResumeService] -[#Blue]-> [ResumeRepository]
+[ResumeService] -[#Blue]-> [SpecificResumeRepository]
+[ResumeService] -[#Blue]-> [TemplateService] : "Retrieve Template"
+[ResumeService] -[#Blue]-> [AIService] : "AI suggestions & parsing"
+[AIService] -[#MediumPurple]-> [Genisys] : "Calls Google Genisys API"
+[SpringBootApplication] -[#Cyan]-> [AWSLambdaConfig] : "Configure"    
+[TemplateController] -[#Red]-> [TemplateService] : "Pick template"
+[TemplateService] -[#Blue]-> [TemplateRepository] 
+[User] "1" -[#Green]-> "0..1" [SpecificResume] : "has one for each job"
+[User] "1" -[#Green]-> "1" [Resume] : "has"
+
+@enduml

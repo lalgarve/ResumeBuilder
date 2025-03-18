@@ -1,0 +1,48 @@
+@startuml
+actor User
+participant "ResumeController" as RC #LightPink
+participant "ResumeService" as RS #LightBlue
+participant "TemplateService" as TS #LightBlue
+participant "GenisysService" as GS #MediumPurple
+participant "Genisys" as G #MediumPurple
+participant "LatexRenderer" as LR #Plum
+participant "FileStorage" as FS #Plum
+participant "S3Storage" as S3 #Moccasin
+participant "SpecificResumeRepository" as SRR #Khaki
+
+' Escolha de template e personalização
+User -> RC: POST /specific-resumes (resumeId, jobDescription)
+RC -> RS: createSpecificResume(resumeId, jobDescription)
+RS -> TS: getTemplate(lastUsed or default)
+TS --> RS: template
+RS -> GS: tailorResume(parsedData, jobDescription)
+GS -> G: call API (customize for job)
+G --> GS: customData
+GS --> RS: customData
+RS --> RC: customData
+RC --> User: 200 OK (customData)
+
+' Edição e preview
+User -> RC: PUT /specific-resumes/{id} (editedData)
+RC -> RS: updateSpecificResume(id, editedData)
+RS --> RC: previewData
+RC --> User: 200 OK (previewData)
+
+' Geração de PDF
+User -> RC: POST /specific-resumes/{id}/generate
+RC -> RS: generatePdf(id)
+RS -> LR: render(customData, template)
+LR --> RS: pdfContent
+RS -> FS: store(pdfContent)
+FS -> S3: upload(pdfContent)
+S3 --> FS: pdfUrl
+FS --> RS: pdfUrl
+RS -> SRR: save(specificResume with pdfUrl)
+SRR --> RS: success
+RS --> RC: pdfUrl
+RC --> User: 200 OK (pdfUrl)
+
+note right of GS: IA personaliza currículo para vaga
+note right of FS: PDF armazenado por 3 dias
+
+@enduml
