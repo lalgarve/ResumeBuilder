@@ -47,32 +47,32 @@ package "Resume Builder System" {
   }
 
   package "External IA Integration" #Lavender {
-    [Genisys]
+    [Gemini]
   }
 }
 
 ' Relacionamentos
 [AnonymousAuthService] -[#Blue]-> [UserRepository]
-[AuthController] -[#Red]-> [AnonymousAuthService] : "Anonymous Login/Sign Up"
-[AuthController] -[#Red]-> [OAuthService] : "OAuth Login/Sign Up"
+[AuthController] -[#Red]-> [AnonymousAuthService] : "Login/Registro anônimo"
+[AuthController] -[#Red]-> [OAuthService] : "Login/Registro usando OAuth"
 [DocumentParser] -[#DarkViolet]-> [ResumeService]
-[FileStorage] -[#DarkViolet]-> [S3Storage] : "uses"
-[LambdaHandler] -[#Orange]-> [SpringBootApplication] : "Send Events"
+[FileStorage] -[#DarkViolet]-> [S3Storage] : "usa"
+[LambdaHandler] -[#Orange]-> [SpringBootApplication] : "Envia eventos"
 [LatexRenderer] -[#DarkViolet]-> [ResumeService] 
 [OAuthService] -[#Blue]-> [UserRepository]
-[ResumeController] -[#Red]-> [ResumeService] : "Manage resume"
+[ResumeController] -[#Red]-> [ResumeService] : "Gerencia currículo"
 [ResumeService] -[#Blue]-> [DocumentParser]
-[ResumeService] -[#Blue]-> [FileStorage] : "Save PDF file" 
+[ResumeService] -[#Blue]-> [FileStorage] : "Grava arquivo PDF" 
 [ResumeService] -[#Blue]-> [LatexRenderer]
 [ResumeService] -[#Blue]-> [ResumeRepository]
 [ResumeService] -[#Blue]-> [SpecificResumeRepository]
-[ResumeService] -[#Blue]-> [TemplateService] : "Retrieve Template"
-[ResumeService] -[#Blue]-> [AIService] : "AI suggestions & parsing"
-[AIService] -[#MediumPurple]-> [Genisys] : "Calls Google Genisys API"
-[SpringBootApplication] -[#Cyan]-> [AWSLambdaConfig] : "Configure"    
-[TemplateController] -[#Red]-> [TemplateService] : "Pick template"
+[ResumeService] -[#Blue]-> [TemplateService] : "Carrega Template"
+[ResumeService] -[#Blue]-> [AIService] : "Sugestões e análise da IA"
+[AIService] -[#MediumPurple]-> [Gemini] : "Chama Google Gemini API"
+[SpringBootApplication] -[#Cyan]-> [AWSLambdaConfig] : "Configura"    
+[TemplateController] -[#Red]-> [TemplateService] : "Escolhe template"
 [TemplateService] -[#Blue]-> [TemplateRepository] 
-[User] "1" -[#Green]-> "0..1" [SpecificResume] : "has one for each job"
-[User] "1" -[#Green]-> "1" [Resume] : "has"
+[User] "1" -[#Green]-> "0..1" [SpecificResume] : "possui um para cada vaga"
+[User] "1" -[#Green]-> "1" [Resume] : "tem"
 
 @enduml
