@@ -28,11 +28,11 @@ package "Models" #LightGreen {
   }
   
 note right of SpecificResume
-	Resume optimized with help of
-	an AI for one specific job description.
-	It's created based on the current
-	user's resume. Further changes in 
-	the user's resume does not impact it.
+	Currículo otimizado com a ajuda de uma IA 
+	para uma descrição de vaga específica. Ele 
+	é criado com base no currículo atual do usuário. 
+	Alterações posteriores no currículo do usuário 
+	não o afetam.
 endnote  
 
   class Template {
