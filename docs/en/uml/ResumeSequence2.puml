@@ -42,7 +42,7 @@ SRR --> RS: success
 RS --> RC: pdfUrl
 RC --> User: 200 OK (pdfUrl)
 
-note right of GS: IA personaliza currículo para vaga
-note right of FS: PDF armazenado por 3 dias
+note right of GS: IA customize resume for job description
+note right of FS: PDF stored temporaly for 3 days
 
 @enduml

@@ -47,7 +47,7 @@ package "Resume Builder System" {
   }
 
   package "External IA Integration" #Lavender {
-    [Genisys]
+    [Gemini]
   }
 }
 
@@ -68,7 +68,7 @@ package "Resume Builder System" {
 [ResumeService] -[#Blue]-> [SpecificResumeRepository]
 [ResumeService] -[#Blue]-> [TemplateService] : "Retrieve Template"
 [ResumeService] -[#Blue]-> [AIService] : "AI suggestions & parsing"
-[AIService] -[#MediumPurple]-> [Genisys] : "Calls Google Genisys API"
+[AIService] -[#MediumPurple]-> [Gemini] : "Calls Google Gemini API"
 [SpringBootApplication] -[#Cyan]-> [AWSLambdaConfig] : "Configure"    
 [TemplateController] -[#Red]-> [TemplateService] : "Pick template"
 [TemplateService] -[#Blue]-> [TemplateRepository] 
