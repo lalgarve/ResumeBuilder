@@ -51,4 +51,4 @@ This structure was designed to be lightweight and cost-effective, leveraging AWS
 
 ## Architecture Diagram
 
-![Architecture Diagram](images/architecture.png)
+![Architecture Diagram](images/Architecture.png)
