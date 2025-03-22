@@ -45,10 +45,10 @@ Integração com serviços AWS:
 - Um `User` possui um `Resume` principal, usado para gerar os outros(1:1).
 - Um `User` pode ter vários `SpecificResume` (1:N), um para cada vaga de emprego específica.
 - Cada `SpecificResume`Resume` está associado a um único `Template` (1:1).
-- Os serviços interagem com os repositórios e utilitários conforme necessário, enquanto o `ResumeService` coordena o fluxo principal do sistema.
+- Os serviços interagem com os repositórios e os utilitários conforme necessário, enquanto o `ResumeService` coordena o fluxo principal do sistema.
 
-Essa estrutura foi projetada para ser leve e econômica, aproveitando a escalabilidade automática do AWS Lambda e o armazenamento temporário no S3, com foco em simplicidade e funcionalidade.
+Essa estrutura foi projetada para ser leve e econômica, aproveitando a escalabilidade automática do AWS Lambda e o armazenamento temporário no S3, com foco em simplicidade e funcionalidade.ddd 
 
 ## Diagrama da Arquitetura
 
-![Diagrama da Arquitetura](imagens/architecture.png)
+![Diagrama da Arquitetura](images/Architecture.png)

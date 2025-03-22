@@ -43,17 +43,17 @@ endnote
 }
 
 note right of Template::templateURL
-	Field pointing to 
-	the definition files 
-	of the template that 
-	was installed in the system.
+    Campo que aponta para
+    os arquivos de definição
+    do modelo que
+    foi instalado no sistema.
 endnote
 	
 
 ' Relacionamentos
-User "1" -- "1" Resume : "has"
-User "1" -- "0..*" SpecificResume : "has one for each job"
-SpecificResume "1" -- "1" Template : "uses"
-Resume "1" -- "1" Template : "default"
+User "1" -- "1" Resume : "possui"
+User "1" -- "0..*" SpecificResume : "possui um para cada vaga"
+SpecificResume "1" -- "1" Template : "usa"
+Resume "1" -- "1" Template : "padrão"
 
 @enduml

@@ -17,6 +17,8 @@ The relationships are:
 - A `User` can have zero or more `SpecificResume` instances (1:N), one for each job.
 - Both `Resume` and `SpecificResume` use a `Template` (1:1), with the `Resume`’s template being the default.
 
+![Class diagram](images/ResumeClass.png)
+
 ## Operational Flow
 
 ### 1. Creating the Base Resume
@@ -29,6 +31,8 @@ When a user uploads a file (PDF, Word, or text) after registering:
 4. The `ResumeService` saves the `Resume` in the `ResumeRepository` with `rawData` and `parsedData`.
 5. The parsed data is returned to the user via the `ResumeController` for review.
 6. The user can request improvement suggestions from the `AIService`, which provides recommendations based on the AI analysis, allowing manual edits before saving changes.
+
+![Sequence diagram: base curriculum creation](images/ResumeSequence1.png)
 
 ### 2. Generating a Customized Resume for a Job Opening
 
@@ -110,6 +114,8 @@ When the user wants to create a resume tailored to a specific job:
    - The PDF is sent to `FileStorage`, which stores it temporarily in `S3Storage` (valid for 3 days) and returns a `pdfUrl`.
    - The `SpecificResume` is saved in the `SpecificResumeRepository` with the customized data and `pdfUrl`.
 7. The `pdfUrl` is returned to the user for download.
+
+![Sequence diagram: customazed resume generation](images/ResumeSequence2.png)
 
 ## Integrations and Dependencies
 

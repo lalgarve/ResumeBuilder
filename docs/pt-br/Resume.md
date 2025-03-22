@@ -17,6 +17,8 @@ Os relacionamentos são:
 - Um `User` pode ter zero ou mais `SpecificResume` (1:N), um para cada vaga.
 - Tanto `Resume` quanto `SpecificResume` usam um `Template` (1:1), sendo o do `Resume` o padrão.
 
+![Diagrama de classes](images/ResumeClass.png)
+
 ## Fluxo de Operação
 
 ### 1. Criação do Currículo Base
@@ -29,6 +31,8 @@ Quando um usuário faz upload de um arquivo (PDF, Word ou texto) após se regist
 4. O `ResumeService` salva o `Resume` no `ResumeRepository` com `rawData` e `parsedData`.
 5. Os dados parseados são retornados ao usuário via `ResumeController` para revisão.
 6. O usuário pode solicitar sugestões de melhorias ao `AIService`, que retorna recomendações baseadas na análise da IA, permitindo edições manuais antes de salvar as alterações.
+
+![Diagrama de sequência: criação currículo base](images/ResumeSequence1.png)
 
 ### 2. Geração de Currículo Personalizado para uma Vaga
 
@@ -44,6 +48,8 @@ Quando o usuário deseja criar um currículo adaptado a uma vaga específica:
    - O PDF é enviado ao `FileStorage`, que o armazena temporariamente no `S3Storage` (com validade de 3 dias) e retorna uma `pdfUrl`.
    - O `SpecificResume` é salvo no `SpecificResumeRepository` com os dados personalizados e a `pdfUrl`.
 7. A `pdfUrl` é retornada ao usuário para download.
+
+![Diagrama de sequência: geração currículo personalizado](images/ResumeSequence2.png)
 
 ## Integrações e Dependências
 
