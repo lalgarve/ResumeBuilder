@@ -1,3 +1,9 @@
+<!----------------------------------------------------------------------- 
+	This is part of the documentation of Deployo.io Resume Builder System.
+	Copyright (C) 2025
+	Leila Otto Algarve
+	See LICENSE.md for copying conditions. 
+------------------------------------------------------------------------>
 # Funcionamento do ResumeService no Resume Builder System
 
 O **ResumeService** é o componente central do **Resume Builder System**, responsável por gerenciar o fluxo de criação, edição e geração de currículos, tanto na forma de um currículo base (`Resume`) quanto em versões personalizadas para vagas específicas (`SpecificResume`). Ele coordena interações entre diversas camadas da arquitetura, como modelos, serviços auxiliares, repositórios e utilitários, garantindo uma experiência fluida para o usuário. Abaixo, detalhamos como o serviço opera em seus principais casos de uso.

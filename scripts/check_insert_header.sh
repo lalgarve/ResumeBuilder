@@ -1,4 +1,19 @@
 #!/bin/bash
+#  Licensed to the Leila Otto Algarve. See the NOTICE file
+#  distributed with this work for additional information
+#  regarding copyright ownership.  The ASF licenses this file
+#  to you under the Apache License, Version 2.0 (the
+#  "License"); you may not use this file except in compliance
+#  with the License.  You may obtain a copy of the License at
+#  
+#    http://www.apache.org/licenses/LICENSE-2.0
+#  
+#  Unless required by applicable law or agreed to in writing,
+#  software distributed under the License is distributed on an
+#  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#  KIND, either express or implied.  See the License for the
+#  specific language governing permissions and limitations
+#  under the License.  
 
 # Script to add license header to a file or list of files from pipe
 
@@ -13,11 +28,10 @@ process_file() {
         return 1
     fi
 
-    # Extrai informações do arquivo de cabeçalho
+    # Extract information of the 
     local pattern=$(awk 'NR==4{printf $1; exit}' "$header_file")
     local number_lines_check=$(awk 'NR==3{printf $1; exit}' "$header_file")
     local number_line_match=$(head -n "$number_lines_check" "$target_file" | grep -c "$pattern")
-
     if [[ "$number_line_match" -eq 0 ]]; then
         local line_insertion=$(awk 'NR==2{printf $1; exit}' "$header_file")
         insert_header.awk -v line_insertion="$line_insertion" -v header_file="$header_file" "$target_file" > temp.sh && mv temp.sh "$target_file"

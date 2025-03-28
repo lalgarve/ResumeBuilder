@@ -1,3 +1,9 @@
+<!----------------------------------------------------------------------- 
+	This is part of the documentation of Deployo.io Resume Builder System.
+	Copyright (C) 2025
+	Leila Otto Algarve
+	See LICENSE.md for copying conditions. 
+------------------------------------------------------------------------>
 # Resume Builder System - Architecture Documentation
 
 The **Resume Builder System** is a system designed to create and manage resumes efficiently, utilizing an architecture based on Spring Boot and AWS Lambda to optimize costs in scenarios with low initial demand. The structure is organized into packages that clearly separate responsibilities, promoting modularity and scalability.
