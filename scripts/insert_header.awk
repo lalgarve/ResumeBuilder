@@ -1,13 +1,13 @@
 #!/usr/bin/gawk -f
 
-NR == line_insertion {
+{ print $0 }
+
+NR == line_insertion-1 {
     header = "awk 'NR>4{print}' " header_file
     while (header | getline) {
         print
     }
-    printf "\n"
     close(header)
     next
 }
 
-{ print $0 }
