@@ -1,3 +1,9 @@
+<!----------------------------------------------------------------------- 
+	This is part of the documentation of Deployo.io Resume Builder System.
+	Copyright (C) 2025
+	Leila Otto Algarve
+	See LICENSE.md for copying conditions. 
+------------------------------------------------------------------------>
 # ResumeBuilder Backlog - Version 1.0 - First Portfolio Ready Version
 
 The **ResumeBuilder** system will be developed using an **API-first design** with Swagger, focusing on delivering a unique value proposition through **artificial intelligence integration** as a key differentiator compared to other portfolio projects. The system will leverage the Gemini AI interface for rapid prototyping and implement core functionality in Java. Beyond functionality, this version emphasizes well-structured code, comprehensive tests (including mocking external services), and a DevOps pipeline with Terraform for deployment.

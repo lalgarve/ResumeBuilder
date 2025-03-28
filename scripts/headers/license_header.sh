@@ -1,9 +1,8 @@
 Shell Script
 2
 15
-the Apache License, Version 2.0 
-#  Licensed to the Leila Otto Algarve under one
-#  or more contributor license agreements.  See the NOTICE file
+Apache\sLicense
+#  Licensed to the Leila Otto Algarve. See the NOTICE file
 #  distributed with this work for additional information
 #  regarding copyright ownership.  The ASF licenses this file
 #  to you under the Apache License, Version 2.0 (the
