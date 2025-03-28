@@ -1,7 +1,7 @@
 Shell Script
 2
 15
-the Apache License, Version 2.0 
+Apache License
 #  Licensed to the Leila Otto Algarve under one
 #  or more contributor license agreements.  See the NOTICE file
 #  distributed with this work for additional information
