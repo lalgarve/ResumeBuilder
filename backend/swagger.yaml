@@ -1,0 +1,535 @@
+openapi: 3.0.0
+info:
+  title: Resume Generator API
+  version: v1
+  description: API for generating and managing resumes with customizable templates and AI optimization.
+
+components:
+  schemas:
+    Section:
+      type: object
+      discriminator:
+        propertyName: sectionType
+      properties:
+        sectionType:
+          type: string
+          description: Type of section (experience, education, publications, text, simple_list, expression_percentage_list, expression_integer_list, title_list)
+        title:
+          type: string
+          description: Section title (optional, depending on the type)
+      required:
+        - sectionType
+
+    ProfessionalExperience:
+      allOf:
+        - $ref: '#/components/schemas/Section'
+        - type: object
+          properties:
+            companies:
+              type: array
+              items:
+                type: object
+                properties:
+                  companyName:
+                    type: string
+                    description: Company name
+                  position:
+                    type: string
+                    description: Position held
+                  startDate:
+                    type: string
+                    format: date
+                    description: Start date
+                  endDate:
+                    type: string
+                    format: date
+                    nullable: true
+                    description: End date (optional, if not current employment)
+                  isCurrent:
+                    type: boolean
+                    description: Indicates if it is the current employment
+                  location:
+                    type: string
+                    description: Location of the company
+                  activities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          description: Activity title
+                        description:
+                          type: string
+                          description: Activity description
+                      required:
+                        - description
+                required:
+                  - companyName
+                  - position
+                  - startDate
+                  - isCurrent
+                  - location
+                  - activities
+          required:
+            - companies
+      description: Professional Experience Section
+
+    Education:
+      allOf:
+        - $ref: '#/components/schemas/Section'
+        - type: object
+          properties:
+            institution:
+              type: string
+              description: Institution name
+            course:
+              type: string
+              description: Course name
+            period:
+              type: string
+              description: Course period (e.g., '2015-2019')
+            startDate:
+              type: string
+              format: date
+              description: Start date
+            endDate:
+              type: string
+              format: date
+              nullable: true
+              description: End date (optional, if not completed yet)
+            isCompleted:
+              type: boolean
+              description: Indicates if the education is completed
+          required:
+            - institution
+            - course
+            - period
+            - startDate
+            - isCompleted
+      description: Education Section
+
+    Publications:
+      allOf:
+        - $ref: '#/components/schemas/Section'
+        - type: object
+          properties:
+            publications:
+              type: array
+              items:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    description: Publication title
+                  description:
+                    type: string
+                    description: Publication description
+                  authors:
+                    type: array
+                    items:
+                      type: string
+                    description: List of authors
+                  publicationDate:
+                    type: string
+                    format: date
+                    description: Date of publication
+                  journal:
+                    type: string
+                    description: Journal or publication venue
+                  volume:
+                    type: string
+                    description: Volume number
+                  issue:
+                    type: string
+                    description: Issue number
+                  pages:
+                    type: string
+                    description: Page range
+                  doi:
+                    type: string
+                    description: Digital Object Identifier
+                required:
+                  - title
+                  - authors
+                  - publicationDate
+          required:
+            - publications
+      description: Publications Section
+
+    Text:
+      allOf:
+        - $ref: '#/components/schemas/Section'
+        - type: object
+          properties:
+            text:
+              type: string
+              description: Section text
+          required:
+            - text
+      description: Text Section (e.g., Profile)
+
+    SimpleList:
+      allOf:
+        - $ref: '#/components/schemas/Section'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                type: string
+              description: List of simple text items
+          required:
+            - items
+      description: Simple List Section
+
+    ExpressionPercentageList:
+      allOf:
+        - $ref: '#/components/schemas/Section'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                type: object
+                properties:
+                  expression:
+                    type: string
+                    description: Expression to be displayed
+                  percentage:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                    description: Percentage value (0-100)
+                required:
+                  - expression
+                  - percentage
+          required:
+            - items
+      description: List with Expression and Percentage Section
+
+    ExpressionIntegerList:
+      allOf:
+        - $ref: '#/components/schemas/Section'
+        - type: object
+          properties:
+            maxValue:
+              type: integer
+              description: Maximum value for all items in the list
+            items:
+              type: array
+              items:
+                type: object
+                properties:
+                  expression:
+                    type: string
+                    description: Expression to be displayed
+                  value:
+                    type: integer
+                    description: Integer value
+                required:
+                  - expression
+                  - value
+          required:
+            - items
+            - maxValue
+      description: List with Expression and Integer Value Section
+
+    TitleList:
+      allOf:
+        - $ref: '#/components/schemas/Section'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    description: Item title
+                  description:
+                    type: string
+                    description: Item description
+                required:
+                  - title
+                  - description
+          required:
+            - items
+      description: List with Titles and Descriptions Section
+
+paths:
+  /users/{userId}:
+    get:
+      summary: Retrieve a user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+          description: The user ID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The user ID
+                  name:
+                    type: string
+                    description: The user's name
+                  profileImageUri:
+                    type: string
+                    format: uri
+                    description: The URI of the user's profile image
+                required:
+                  - id
+                  - name
+                  - profileImageUri
+              example:
+                id: 1
+                name: "John Doe"
+                profileImageUri: "https://example.com/users/1/profile.jpg"
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+              example:
+                error: "User not found"
+
+  /resumes/{userId}:
+    get:
+      summary: Get resume for a user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+          description: The user ID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The resume ID
+                  sections:
+                    type: array
+                    description: The resume content
+                    items:
+                      oneOf:
+                        - $ref: '#/components/schemas/ProfessionalExperience'
+                        - $ref: '#/components/schemas/Education'
+                        - $ref: '#/components/schemas/Publications'
+                        - $ref: '#/components/schemas/Text'
+                        - $ref: '#/components/schemas/SimpleList'
+                        - $ref: '#/components/schemas/ExpressionPercentageList'
+                        - $ref: '#/components/schemas/ExpressionIntegerList'
+                        - $ref: '#/components/schemas/TitleList'
+                required:
+                  - id
+                  - sections
+              example:
+                id: 1
+                sections:
+                  - sectionType: "ProfessionalExperience"
+                    companies:
+                      - companyName: "Tech Corp"
+                        position: "Software Engineer"
+                        startDate: "2020-01-01"
+                        endDate: null
+                        isCurrent: true
+                        location: "San Francisco, CA"
+                        activities:
+                          - description: "Developed RESTful APIs"
+                  - sectionType: "Education"
+                    institution: "University X"
+                    course: "B.Sc. Computer Science"
+                    period: "2015-2019"
+                    startDate: "2015-09-01"
+                    endDate: "2019-06-30"
+                    isCompleted: true
+        '404':
+          description: Resume not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+              example:
+                error: "Resume not found"
+
+  /resumes/{userId}/customized:
+    post:
+      summary: Generate customized resume for a job position
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+          description: The user ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                jobDescription:
+                  type: string
+                  description: Job description
+              required:
+                - jobDescription
+            example:
+              jobDescription: "Software Engineer role requiring Java and Angular experience."
+      responses:
+        '200':
+          description: Customized resume successfully generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The customized resume ID
+                  sections:
+                    type: array
+                    description: The customized resume content
+                    items:
+                      oneOf:
+                        - $ref: '#/components/schemas/ProfessionalExperience'
+                        - $ref: '#/components/schemas/Education'
+                        - $ref: '#/components/schemas/Publications'
+                        - $ref: '#/components/schemas/Text'
+                        - $ref: '#/components/schemas/SimpleList'
+                        - $ref: '#/components/schemas/ExpressionPercentageList'
+                        - $ref: '#/components/schemas/ExpressionIntegerList'
+                        - $ref: '#/components/schemas/TitleList'
+                  pdfDownloadUri:
+                    type: string
+                    format: uri
+                    description: The URI for downloading the PDF version of the customized resume
+                required:
+                  - id
+                  - sections
+                  - pdfDownloadUri
+              example:
+                id: 2
+                sections:
+                  - sectionType: "ProfessionalExperience"
+                    companies:
+                      - companyName: "Tech Corp"
+                        position: "Software Engineer"
+                        startDate: "2020-01-01"
+                        endDate: null
+                        isCurrent: true
+                        location: "San Francisco, CA"
+                        activities:
+                          - description: "Developed RESTful APIs using Java"
+                  - sectionType: "SimpleList"
+                    items:
+                      - "Java"
+                      - "Angular"
+                pdfDownloadUri: "https://example.com/resumes/user1-custom.pdf"
+        '400':
+          description: Bad request due to invalid or incompatible input (e.g., missing job description, incompatible job description)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+              example:
+                error: "Missing job description"
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+              example:
+                error: "User not found"
+
+  /templates:
+    get:
+      summary: Get all available templates
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Template name
+                    description:
+                      type: string
+                      description: Template description
+                    palettes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: Palette ID
+                          name:
+                            type: string
+                            description: Palette name
+                          description:
+                            type: string
+                            description: Palette description
+                          imageUri:
+                            type: string
+                            format: uri
+                            description: URI of the palette image
+                          colors:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                code:
+                                  type: string
+                                  pattern: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$'
+                                  description: Color code in hexadecimal format (e.g., #FFFFFF or #FFF)
+                                description:
+                                  type: string
+                                  description: Where this color is used (e.g., background, title)
+                              required:
+                                - code
+                                - description
+                        required:
+                          - id
+                          - name
+                          - description
