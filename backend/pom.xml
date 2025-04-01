@@ -15,6 +15,7 @@
         <quarkus.platform.version>3.21.0</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.2</surefire-plugin.version>
+        <openapi-generator.version>6.6.0</openapi-generator.version> <!-- Adicione a versão do OpenAPI Generator -->
     </properties>
 
     <dependencyManagement>
@@ -93,24 +94,30 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
+            <!-- OpenAPI Generator Plugin -->
             <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${surefire-plugin.version}</version>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator.version}</version>
                 <executions>
                     <execution>
+                        <id>generate-openapi-code</id>
                         <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
+                            <goal>generate</goal>
                         </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec> <!-- Caminho para o seu arquivo OpenAPI -->
+                            <generatorName>spring</generatorName>
+                            <configOptions>
+                                <sourceFolder>src/gen/java/main</sourceFolder> <!-- Diretório de saída do código gerado -->
+                                <apiPackage>io.deployo.resumebuilder.api</apiPackage> <!-- Substitua pelo pacote da sua API -->
+                                <modelPackage>io.deployo.resumebuilder.model</modelPackage> <!-- Substitua pelo pacote dos seus Models -->
+                                <interfaceOnly>true</interfaceOnly>  <!-- Gera apenas as interfaces -->
+                                <delegatePattern>true</delegatePattern> <!-- Usa o Delegate Pattern para implementação -->
+                            </configOptions>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <systemPropertyVariables>
-                        <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
-                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                        <maven.home>${maven.home}</maven.home>
-                    </systemPropertyVariables>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -125,7 +132,7 @@
             </activation>
             <properties>
                 <skipITs>false</skipITs>
-                <quarkus.native.enabled>true</quarkus.native.enabled>
+                <quarkus.package.type>native</quarkus.package.type>
             </properties>
         </profile>
     </profiles>
